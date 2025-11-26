@@ -1,12 +1,4 @@
-*{
-    margin: 0;
-}
-h1{
-    text-align: center;
-}
-
-#destino-1, #destino-2, #destino-3, #destino-4{
-    width: 50%;
-    height: 300px;
-    float: left;
+#mapa {
+    width: 100%;
+    height: 1000px;
 }
