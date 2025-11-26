@@ -1,5 +1,12 @@
 var geo = navigator.geolocation;
 
+const pontos = [
+    [-86.8523001, 21.185825],
+    [-158.045241, 21.308769],
+    [-42.0129285, -22.9877924],
+    [-39.0481068, -16.407923],
+];
+
 geo.getCurrentPosition(position => {
     const { latitude, longitude } = position.coords;
 
@@ -16,30 +23,33 @@ geo.getCurrentPosition(position => {
         ],
         view: new ol.View({
             center: ol.proj.fromLonLat([longitude, latitude]),
-            zoom: 15
+            zoom: 5
         })
     });
 
-    // Criar ponto
-    const ponto = new ol.Feature({
-        geometry: new ol.geom.Point(
-            ol.proj.fromLonLat([longitude, latitude])
-        )
+    // ✅ Criar múltiplos pontos corretamente
+    const features = pontos.map(coord => {
+        const ponto = new ol.Feature({
+            geometry: new ol.geom.Point(
+                ol.proj.fromLonLat(coord)
+            )
+        });
+
+        ponto.setStyle(new ol.style.Style({
+            image: new ol.style.Circle({
+                radius: 7,
+                fill: new ol.style.Fill({ color: 'red' }),
+                stroke: new ol.style.Stroke({ color: 'white', width: 2 })
+            })
+        }));
+
+        return ponto; // ✅ ESSENCIAL
     });
 
-    // Estilo correto do ponto
-    ponto.setStyle(new ol.style.Style({
-        image: new ol.style.Circle({
-            radius: 7,
-            fill: new ol.style.Fill({ color: 'red' }),
-            stroke: new ol.style.Stroke({ color: 'white', width: 2 })
-        })
-    }));
-
-    // Criar camada vetorial
+    // ✅ Criar camada vetorial
     const camada = new ol.layer.Vector({
         source: new ol.source.Vector({
-            features: [ponto]
+            features: features
         })
     });
 
